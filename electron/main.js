@@ -41,7 +41,7 @@ if (!gotTheLock) {
         preload: path.join(__dirname, 'preload.js'),
         nodeIntegration: false,
         contextIsolation: true,
-        webSecurity: false, // Allow local file loading smoothly in production
+        webSecurity: true, // Keep Chromium's web security protections enabled.
       },
       autoHideMenuBar: true,
     });
@@ -83,10 +83,9 @@ if (!gotTheLock) {
 ipcMain.handle('export-db-file', async (event, dataString) => {
   if (!mainWindow) return { success: false };
   const { filePath } = await dialog.showSaveDialog(mainWindow, {
-    title: 'Export Grocery Database Backup',
-    defaultPath: `grocery_pos_backup_${new Date().toISOString().split('T')[0]}.sqlite`,
+    title: 'Export Grocery POS JSON Backup',
+    defaultPath: `grocery_pos_backup_${new Date().toISOString().split('T')[0]}.json`,
     filters: [
-      { name: 'SQLite Database', extensions: ['sqlite', 'db'] },
       { name: 'JSON Backup', extensions: ['json'] },
       { name: 'All Files', extensions: ['*'] }
     ]
@@ -102,10 +101,10 @@ ipcMain.handle('export-db-file', async (event, dataString) => {
 ipcMain.handle('import-db-file', async () => {
   if (!mainWindow) return { success: false };
   const { filePaths } = await dialog.showOpenDialog(mainWindow, {
-    title: 'Import Grocery Database Backup',
+    title: 'Import Grocery POS JSON Backup',
     properties: ['openFile'],
     filters: [
-      { name: 'Database & Backup', extensions: ['sqlite', 'db', 'json'] },
+      { name: 'JSON Backup', extensions: ['json'] },
       { name: 'All Files', extensions: ['*'] }
     ]
   });
