@@ -14,7 +14,8 @@
     "lint": "tsc --noEmit",
     "electron:dev": "electron .",
     "electron:build": "vite build && electron-builder",
-    "electron:pack": "electron-builder --dir"
+    "electron:pack": "electron-builder --dir",
+    "postinstall": "electron-builder install-app-deps"
   },
   "build": {
     "appId": "com.localbusiness.grocerypos",
