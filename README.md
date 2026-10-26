@@ -1,6 +1,6 @@
 # Grocery POS & Inventory Management System 🛒⚡
 
-> 🚀 A modern offline-first Grocery POS & Inventory Management System built with React, TypeScript, Tailwind CSS, Electron, and SQLite. Designed for supermarkets, grocery stores, and retail businesses.
+> 🚀 A modern offline-first Grocery POS & Inventory Management System built with React, TypeScript, Tailwind CSS, Electron, and SQLite-backed local persistence. Designed for grocery stores and retail businesses.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)](https://react.dev/)
@@ -8,7 +8,7 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38BDF8?logo=tailwindcss)](https://tailwindcss.com/)
 [![Electron](https://img.shields.io/badge/Electron-43-47848F?logo=electron)](https://www.electronjs.org/)
 
-A high-performance, **100% Offline-First Grocery POS, Inventory, and Billing System** built with React 19, TypeScript, Tailwind CSS, and Electron. Designed for supermarkets, retail grocery stores, and Kirana outlets requiring instant hardware USB barcode scanning, offline dynamic UPI payments, local browser storage (currently localStorage JSON, not a real SQLite database), and optional AI-driven stock intelligence.
+A high-performance, **100% Offline-First Grocery POS, Inventory, and Billing System** built with React 19, TypeScript, Tailwind CSS, and Electron. Designed for supermarkets, retail grocery stores, and Kirana outlets requiring instant hardware USB barcode scanning, local SQLite-backed persistence in the Electron desktop app, portable JSON backups, and optional AI-driven stock intelligence.
 
 ---
 
@@ -22,13 +22,13 @@ A high-performance, **100% Offline-First Grocery POS, Inventory, and Billing Sys
 ## 🌟 Key Features
 
 * **⚡ Ultra-Fast Barcode POS Billing**: Sub-100ms USB hardware barcode scanner support (wedge detection), auto-focus guard, audio feedback, and camera scanner backup.
-* **📱 Dynamic UPI QR Payment Module**: Generates instant compliant UPI payment QR codes (`upi://pay`) with merchant VPA and exact invoice totals without external payment gateway fees.
+* **🧾 Flexible Billing & Receipts**: Supports thermal/A4 invoice layouts and direct receipt printing; optional legacy payment integrations are disabled by default.
 * **📦 Complete Inventory & Batch Control**: Track stock quantities, low-stock threshold alerts, cost prices, selling prices, wholesale rates, and expiration dates.
 * **🤖 AI-Powered Smart Reordering**: Integrated Google Gemini AI analysis for automated demand forecasting, deadstock warnings, and purchase order drafting.
 * **👥 Customer Ledger & Khata Dues**: Track customer credit accounts, transaction histories, and pending balance payments.
 * **🏢 Multi-Branch & Employee Security**: Multi-store location switching, staff attendance logs, and PIN-protected admin actions.
 * **🧾 Custom Barcode Label & Receipt Designer**: Built-in visual label designer and thermal print engine with custom shop headers and GST formatting.
-* **🛡️ Local Offline Storage & Disaster Recovery**: Data is currently stored as JSON in browser `localStorage` under separate keys. Backups are JSON exports; the `.sqlite` / `.db` extensions do not represent real SQLite database files.
+* **🛡️ Local Offline Storage & Disaster Recovery**: The Electron desktop app stores each application data collection as JSON values inside a real SQLite database file under Electron's user-data directory. Portable exports remain JSON files.
 * **💻 Desktop Electron Package**: Ready to package into a standalone offline Windows `.exe` installer or Linux AppImage.
 
 ---
@@ -39,9 +39,9 @@ A high-performance, **100% Offline-First Grocery POS, Inventory, and Billing Sys
 | :-: | :-: |
 | ![POS Terminal](screenshots/pos-billing.png) | ![Inventory Intelligence](screenshots/inventory.png) |
 
-| Dynamic UPI QR Generator | Business Reports & Analytics |
+| Billing & Receipt Printing | Business Reports & Analytics |
 | :-: | :-: |
-| ![UPI Payments](screenshots/upi-qr.png) | ![Reports](screenshots/reports.png) |
+| ![Billing](screenshots/billing.png) | ![Reports](screenshots/reports.png) |
 
 ---
 
@@ -50,7 +50,7 @@ A high-performance, **100% Offline-First Grocery POS, Inventory, and Billing Sys
 * **Frontend**: React 19, TypeScript, Tailwind CSS v4, Lucide React Icons, Motion
 * **Barcode Engine**: `@zxing/browser`, `@zxing/library`, `JsBarcode`
 * **Desktop Runtime**: Electron 43, `electron-builder`
-* **Local Persistence**: Browser `localStorage` JSON key-value storage (not SQLite or IndexedDB)
+* **Local Persistence**: Native SQLite key-value table in Electron; browser `localStorage` fallback for web preview
 * **AI Integration**: `@google/genai` (Google Gemini API)
 * **Build System**: Vite 6, TypeScript 5.8
 
@@ -76,7 +76,7 @@ Grocery-Pos-Desktop/
 ├── screenshots/                # Application preview screenshots
 ├── src/                        # React application source code
 │   ├── components/             # UI Views & Modal components
-│   ├── db/                     # SQLite local storage layer
+│   ├── db/                     # SQLite-backed persistence adapter
 │   ├── services/               # Payment & service utilities
 │   ├── utils/                  # Sound & helper functions
 │   ├── App.tsx                 # Main application controller
@@ -191,7 +191,7 @@ The output executable will be placed in `release/`:
 
 ## ⚠️ Known Limitations
 
-* **Single Device Local Storage by Default**: `src/db/sqliteStorage.ts` uses `localStorage.getItem` / `localStorage.setItem` with JSON serialization. It does not use SQLite or IndexedDB, despite the class name and some UI copy. Data is tied to that app origin/profile and is not shared automatically with other computers. Backups are JSON, not raw `.sqlite` database files.
+* **SQLite Persistence**: Electron creates `grocery-pos.sqlite` in its app user-data directory and stores JSON-serialized app collections in a SQLite key/value table. On first launch after upgrade, existing localStorage values are migrated key-by-key when available. The browser preview continues to use localStorage. Backups exported from the app are portable JSON files, not raw SQLite database copies.
 * **Thermal Printing**: Web browser security requires confirming the system print dialog unless running inside the native Electron desktop container with silent printing flags enabled.
 
 ---
@@ -199,10 +199,8 @@ The output executable will be placed in `release/`:
 ## 🔮 Future Improvements
 
 - [ ] Algeria localization: Arabic RTL and French UI, DZD currency, Algerian receipt/invoice settings, and removal of India-specific sample data/payment assumptions.
-- [ ] Reliable native desktop persistence using a real SQLite database stored under Electron `app.getPath('userData')`, with schema migrations and tested import/export.
-- [ ] Multi-terminal LAN mode: a host service on the manager PC, client terminals over Ethernet/Wi-Fi, authenticated requests, transaction-safe stock updates, duplicate-sale protection, and LAN backup/restore.
+- [x] Initial native desktop persistence using a real SQLite database stored under Electron `app.getPath('userData')`; app collections are stored as JSON values in a SQLite key/value table.
 - [ ] Automated tests for sales, inventory, debts, purchases, returns, backups, and recovery before commercial release.
-- [ ] Multi-terminal LAN syncing over local network WebSocket server.
 - [ ] Direct integration with Thermal POS printers via WebBluetooth / ESC-POS.
 - [ ] WhatsApp API Integration for automated digital customer receipt dispatch.
 - [ ] Native Android POS Tablet app using Capacitor / React Native.
@@ -242,4 +240,4 @@ For questions or issues, please open a GitHub Issue or reach out via [pplcallmes
 
 ## ⚠️ Disclaimer
 
-*This software is provided "as is" without warranty of any kind. Users are responsible for ensuring compliance with local taxation laws, GST reporting, and merchant UPI payment guidelines.*
+*This software is provided "as is" without warranty of any kind. Users are responsible for ensuring compliance with applicable Algerian tax, invoicing, and business requirements.*
