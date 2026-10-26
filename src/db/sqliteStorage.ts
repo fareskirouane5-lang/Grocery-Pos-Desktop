@@ -633,6 +633,21 @@ class SQLiteStorageEngine {
 
   constructor() {
     this.settings = this.loadData(STORAGE_KEYS.SETTINGS, DEFAULT_SETTINGS);
+    // Normalize untouched India-specific demo defaults for the Algerian edition.
+    if (this.settings.currencySymbol === '₹' || !this.settings.currencySymbol) {
+      this.settings.currencySymbol = 'دج';
+      this.settings.enableUpiPayments = false;
+      if (this.settings.upiId === 'merchant@upi') this.settings.upiId = '';
+      if (this.settings.merchantName === 'Green Grocery & Supermarket') this.settings.merchantName = '';
+      if (this.settings.upiReceiptFooter === 'QR Payment Completed via Dynamic UPI') this.settings.upiReceiptFooter = '';
+      if (this.settings.defaultPaymentNote === 'Thank you for shopping at Green Grocery!') this.settings.defaultPaymentNote = 'شكراً لثقتكم بنا';
+      if (this.settings.shopName === 'Green Grocery & Supermarket') this.settings.shopName = 'متجري';
+      if (this.settings.ownerName === 'Rajesh Kumar') this.settings.ownerName = '';
+      if (this.settings.address.includes('Bangalore')) this.settings.address = '';
+      if (this.settings.phone.startsWith('+91')) this.settings.phone = '';
+      if (this.settings.gstNumber?.startsWith('29')) this.settings.gstNumber = '';
+      this.persistSettings();
+    }
     this.products = this.loadData(STORAGE_KEYS.PRODUCTS, INITIAL_SAMPLE_PRODUCTS);
     this.sales = this.loadData(STORAGE_KEYS.SALES, INITIAL_SAMPLE_SALES);
     this.stockLogs = this.loadData(STORAGE_KEYS.STOCK_LOGS, []);
