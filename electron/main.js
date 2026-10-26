@@ -111,6 +111,10 @@ ipcMain.on('storage-set', (event, key, value) => {
 });
 
 // Native IPC Listeners for Desktop File Backup & Printing
+app.on('before-quit', () => {
+  if (sqliteDb && sqliteDb.open) sqliteDb.close();
+});
+
 ipcMain.handle('export-db-file', async (event, dataString) => {
   if (!mainWindow) return { success: false };
   const { filePath } = await dialog.showSaveDialog(mainWindow, {
