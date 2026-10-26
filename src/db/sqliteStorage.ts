@@ -92,7 +92,7 @@ export const INITIAL_SAMPLE_BRANCHES: Branch[] = [
     name: 'Main Supermarket Branch',
     code: 'MAIN',
     address: 'Shop No. 12, Main Market Road, Sector 4, Bangalore',
-    phone: '+91 98765 00000',
+    phone: '',
     isPrimary: true,
   },
   {
@@ -145,13 +145,13 @@ export const INITIAL_SAMPLE_UPDATES: UpdatePackage[] = [
 
 // Initial default shop settings
 export const DEFAULT_SETTINGS: ShopSettings = {
-  shopName: 'Green Grocery & Supermarket',
-  ownerName: 'Rajesh Kumar',
-  address: 'Shop No. 12, Main Market Road, Sector 4, Bangalore - 560001',
+  shopName: 'متجري',
+  ownerName: '',
+  address: '',
   phone: '+91 98765 00000',
-  gstNumber: '29XXXXX0000X1Z5',
+  gstNumber: '',
   invoicePrefix: 'INV',
-  currencySymbol: '₹',
+  currencySymbol: 'دج',
   defaultTaxPercent: 0,
   lowStockThreshold: 10,
   receiptType: 'thermal',
@@ -162,14 +162,14 @@ export const DEFAULT_SETTINGS: ShopSettings = {
   backupFrequency: 'daily',
   requireManagerPinForDiscount: true,
   discountThresholdPercent: 15,
-  enableLoyalty: true,
-  loyaltyPointRatio: 100, // 1 pt per ₹100
+  enableLoyalty: false,
+  loyaltyPointRatio: 100, // 1 point per 100 DZD
   // UPI Payment Default Settings
-  enableUpiPayments: true,
-  merchantName: 'Green Grocery & Supermarket',
-  upiId: 'merchant@upi',
-  defaultPaymentNote: 'Thank you for shopping at Green Grocery!',
-  upiReceiptFooter: 'QR Payment Completed via Dynamic UPI',
+  enableUpiPayments: false,
+  merchantName: '',
+  upiId: '',
+  defaultPaymentNote: 'شكراً لثقتكم بنا',
+  upiReceiptFooter: '',
   merchantLogo: '',
 };
 
