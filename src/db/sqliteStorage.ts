@@ -1,6 +1,8 @@
 /**
- * Local Offline Storage Engine simulating SQLite schema tables.
- * Fully persistent, zero external dependencies, supports backup/restore as .sqlite / .db / .json.
+ * Local offline storage adapter.
+ * IMPORTANT: this implementation currently stores JSON records in browser localStorage.
+ * It is not SQLite or IndexedDB. Backup output is JSON and must be treated as JSON.
+ * A native SQLite adapter is planned for the Electron desktop build.
  */
 
 import { 
