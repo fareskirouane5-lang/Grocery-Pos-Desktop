@@ -1,8 +1,7 @@
 /**
  * Local offline storage adapter.
- * IMPORTANT: this implementation currently stores JSON records in browser localStorage.
- * It is not SQLite or IndexedDB. Backup output is JSON and must be treated as JSON.
- * A native SQLite adapter is planned for the Electron desktop build.
+ * Electron desktop: records are JSON values stored in a native SQLite key/value table.
+ * Browser preview: records use localStorage as a development fallback. Portable backups remain JSON.
  */
 
 import { 
@@ -59,7 +58,7 @@ function writeStorageItem(key: string, value: string): void {
     }
     return;
   }
-  writeStorageItem(key, value);
+  localStorage.setItem(key, value);
 }
 
 
