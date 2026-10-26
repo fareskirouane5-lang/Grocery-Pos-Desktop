@@ -27,7 +27,7 @@ A high-performance, **100% Offline-First Grocery POS, Inventory, and Billing Sys
 * **🤖 AI-Powered Smart Reordering**: Integrated Google Gemini AI analysis for automated demand forecasting, deadstock warnings, and purchase order drafting.
 * **👥 Customer Ledger & Khata Dues**: Track customer credit accounts, transaction histories, and pending balance payments.
 * **🏢 Multi-Branch & Employee Security**: Multi-store location switching, staff attendance logs, and PIN-protected admin actions.
-* **🧾 Custom Barcode Label & Receipt Designer**: Built-in visual label designer and thermal print engine with custom shop headers and GST formatting.
+* **🧾 Custom Barcode Label & Receipt Designer**: Built-in visual label designer and thermal print engine with custom shop headers and configurable tax formatting.
 * **🛡️ Local Offline Storage & Disaster Recovery**: The Electron desktop app stores each application data collection as JSON values inside a real SQLite database file under Electron's user-data directory. Portable exports remain JSON files.
 * **💻 Desktop Electron Package**: Ready to package into a standalone offline Windows `.exe` installer or Linux AppImage.
 
