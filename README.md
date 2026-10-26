@@ -8,7 +8,7 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38BDF8?logo=tailwindcss)](https://tailwindcss.com/)
 [![Electron](https://img.shields.io/badge/Electron-43-47848F?logo=electron)](https://www.electronjs.org/)
 
-A high-performance, **100% Offline-First Grocery POS, Inventory, and Billing System** built with React 19, TypeScript, Tailwind CSS, and Electron. Designed for supermarkets, retail grocery stores, and Kirana outlets requiring instant hardware USB barcode scanning, offline dynamic UPI payments, local SQLite-backed persistence, and AI-driven stock intelligence.
+A high-performance, **100% Offline-First Grocery POS, Inventory, and Billing System** built with React 19, TypeScript, Tailwind CSS, and Electron. Designed for supermarkets, retail grocery stores, and Kirana outlets requiring instant hardware USB barcode scanning, offline dynamic UPI payments, local browser storage (currently localStorage JSON, not a real SQLite database), and optional AI-driven stock intelligence.
 
 ---
 
@@ -28,7 +28,7 @@ A high-performance, **100% Offline-First Grocery POS, Inventory, and Billing Sys
 * **👥 Customer Ledger & Khata Dues**: Track customer credit accounts, transaction histories, and pending balance payments.
 * **🏢 Multi-Branch & Employee Security**: Multi-store location switching, staff attendance logs, and PIN-protected admin actions.
 * **🧾 Custom Barcode Label & Receipt Designer**: Built-in visual label designer and thermal print engine with custom shop headers and GST formatting.
-* **🛡️ Local SQLite Storage & Disaster Recovery**: Embedded client-side SQLite storage with one-click full database JSON export, import, and recycle bin recovery.
+* **🛡️ Local Offline Storage & Disaster Recovery**: Data is currently stored as JSON in browser `localStorage` under separate keys. Backups are JSON exports; the `.sqlite` / `.db` extensions do not represent real SQLite database files.
 * **💻 Desktop Electron Package**: Ready to package into a standalone offline Windows `.exe` installer or Linux AppImage.
 
 ---
@@ -50,7 +50,7 @@ A high-performance, **100% Offline-First Grocery POS, Inventory, and Billing Sys
 * **Frontend**: React 19, TypeScript, Tailwind CSS v4, Lucide React Icons, Motion
 * **Barcode Engine**: `@zxing/browser`, `@zxing/library`, `JsBarcode`
 * **Desktop Runtime**: Electron 43, `electron-builder`
-* **Local Persistence**: Client-side SQLite & IndexedDB storage wrapper
+* **Local Persistence**: Browser `localStorage` JSON key-value storage (not SQLite or IndexedDB)
 * **AI Integration**: `@google/genai` (Google Gemini API)
 * **Build System**: Vite 6, TypeScript 5.8
 
@@ -191,13 +191,17 @@ The output executable will be placed in `release/`:
 
 ## ⚠️ Known Limitations
 
-* **Single Device Local Storage by Default**: Data is saved directly inside the browser's local SQLite/IndexedDB engine. For multi-terminal synchronization, export and sync database backups periodically.
+* **Single Device Local Storage by Default**: `src/db/sqliteStorage.ts` uses `localStorage.getItem` / `localStorage.setItem` with JSON serialization. It does not use SQLite or IndexedDB, despite the class name and some UI copy. Data is tied to that app origin/profile and is not shared automatically with other computers. Backups are JSON, not raw `.sqlite` database files.
 * **Thermal Printing**: Web browser security requires confirming the system print dialog unless running inside the native Electron desktop container with silent printing flags enabled.
 
 ---
 
 ## 🔮 Future Improvements
 
+- [ ] Algeria localization: Arabic RTL and French UI, DZD currency, Algerian receipt/invoice settings, and removal of India-specific sample data/payment assumptions.
+- [ ] Reliable native desktop persistence using a real SQLite database stored under Electron `app.getPath('userData')`, with schema migrations and tested import/export.
+- [ ] Multi-terminal LAN mode: a host service on the manager PC, client terminals over Ethernet/Wi-Fi, authenticated requests, transaction-safe stock updates, duplicate-sale protection, and LAN backup/restore.
+- [ ] Automated tests for sales, inventory, debts, purchases, returns, backups, and recovery before commercial release.
 - [ ] Multi-terminal LAN syncing over local network WebSocket server.
 - [ ] Direct integration with Thermal POS printers via WebBluetooth / ESC-POS.
 - [ ] WhatsApp API Integration for automated digital customer receipt dispatch.
